@@ -2,7 +2,7 @@ var c = module.exports = {}
 
 // mongo configuration
 c.mongo = {}
-c.mongo.db = process.env.ZENBOT_MONGODB_DATABASE || 'zenbot4'
+c.mongo.db = process.env.ZENBOT_MONGODB_DATABASE || 'zenbot1'
 
 // Must provide EITHER c.mongo.connectionString OR c.mongo.host,port,username,password
 c.mongo.connectionString = process.env.ZENBOT_MONGODB_CONNECTION_STRING || null
@@ -17,7 +17,7 @@ c.mongo.replicaSet = process.env.ZENBOT_MONGO_REPLICASET || null
 c.mongo.authMechanism = process.env.ZENBOT_MONGO_AUTH_MECHANISM || null
 
 // default selector. only used if omitting [selector] argument from a command.
-c.selector = process.env.ZENBOT_DEFAULT_SELECTOR || 'gdax.BTC-USD'
+c.selector = process.env.ZENBOT_DEFAULT_SELECTOR || 'binance.BTCUSDT'
 // name of default trade strategy
 c.strategy = process.env.ZENBOT_DEFAULT_STRATEGY || 'trend_ema'
 
@@ -46,8 +46,8 @@ c.kraken.tosagree = process.env.ZENBOT_KRAKEN_TOS_AGREE || 'disagree'
 
 // to enable Binance trading, enter your API credentials:
 c.binance = {}
-c.binance.key = process.env.ZENBOT_BINANCE_API_KEY || 'YOUR-API-KEY'
-c.binance.secret = process.env.ZENBOT_BINANCE_SECRET || 'YOUR-API-SECRET'
+c.binance.key = process.env.ZENBOT_BINANCE_API_KEY || 'rqGgoPsQLfbp1Tx31Tz8lsrUYZswOGVRg6aaGdgYUeCOVF48f5JPXrNJhuBLtvZI'
+c.binance.secret = process.env.ZENBOT_BINANCE_SECRET || 'OCWbCdH1ctwjOwuoCxatWQ5BJkAKQ6IkyXtC8tZ3gRSms2Ndbso1PqNUMDlnUhML'
 
 // to enable Binance US trading, enter your API credentials:
 c.binanceus = {}

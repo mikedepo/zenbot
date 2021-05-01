@@ -1,3 +1,4 @@
+//zenbot trade binance.STMX-USDT --poll_trades 3000 --days 1 --period 3s --period_length 3s --debug --paper --bollinger_size 20 --bollinger_time 2 --bollinger_d_ma_type SMA --bollinger_upper_bound_pct 0 --bollinger_lower_bound_pct 0 --use_prev_trades 
 var z = require('zero-fill')
   , n = require('numbro')
   , bollinger = require('../../../lib/bollinger')
@@ -8,9 +9,9 @@ module.exports = {
   description: 'Buy when (Signal ≤ Lower Bollinger Band) and sell when (Signal ≥ Upper Bollinger Band).',
 
   getOptions: function () {
-    this.option('period', 'period length, same as --period_length', String, '1h')
-    this.option('period_length', 'period length, same as --period', String, '1h')
-    this.option('bollinger_size', 'period size', Number, 20)
+    this.option('period', 'period length, same as --period_length', String, '1m')
+    this.option('period_length', 'period length, same as --period', String, '1m')
+    this.option('bollinger_size', 'period size', Number, 200)
     this.option('bollinger_time', 'times of standard deviation between the upper band and the moving averages', Number, 2)
     this.option('bollinger_upper_bound_pct', 'pct the current price should be near the bollinger upper bound before we sell', Number, 0)
     this.option('bollinger_lower_bound_pct', 'pct the current price should be near the bollinger lower bound before we buy', Number, 0)
@@ -22,6 +23,7 @@ module.exports = {
   },
 
   onPeriod: function (s, cb) {
+    console.log("bollinger!");
     if (s.period.bollinger) {
       if (s.period.bollinger.upperBound && s.period.bollinger.lowerBound) {
         let upperBound = s.period.bollinger.upperBound
@@ -50,9 +52,9 @@ module.exports = {
         } else if (s.period.close < (lowerBound / 100) * (100 + s.options.bollinger_lower_bound_pct)) {
           color = 'red'
         }
-        cols.push(z(8, n(s.period.close).format('+00.0000'), ' ')[color])
-        cols.push(z(8, n(lowerBound).format('0.000000').substring(0,7), ' ').cyan)
-        cols.push(z(8, n(upperBound).format('0.000000').substring(0,7), ' ').cyan)
+        cols.push(z(8, n(lowerBound).format('0.000000').substring(0,9), ' ').cyan)
+        cols.push(z(8, n(s.period.close).format(' 0.000000'), ' ')[color])
+        cols.push(z(8, n(upperBound).format('0.000000').substring(0,9), ' ').cyan)
       }
     }
     else {

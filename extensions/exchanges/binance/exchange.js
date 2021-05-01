@@ -70,8 +70,11 @@ module.exports = function binance (conf) {
       }
 
       const symbol = joinProduct(opts.product_id)
+      
       client.fetchTrades(symbol, startTime, undefined, args).then(result => {
-
+        
+        //console.log((' Trades Fetched!').red);
+        
         if (result.length === 0 && opts.from) {
           // client.fetchTrades() only returns trades in an 1 hour interval.
           // So we use fetchOHLCV() to detect trade appart from more than 1h.
@@ -87,6 +90,7 @@ module.exports = function binance (conf) {
         }
         return result
       }).then(result => {
+        console.log((" " + result.length + ' Trades Fetched!').red);
         var trades = result.map(trade => ({
           trade_id: trade.id,
           time: trade.timestamp,
@@ -105,6 +109,7 @@ module.exports = function binance (conf) {
     getBalance: function (opts, cb) {
       var func_args = [].slice.call(arguments)
       var client = authedClient()
+      console.log((' Fetch Balance!').red);
       client.fetchBalance().then(result => {
         var balance = {asset: 0, currency: 0}
         Object.keys(result).forEach(function (key) {
@@ -140,6 +145,7 @@ module.exports = function binance (conf) {
     getDepth: function (opts, cb) {
       var func_args = [].slice.call(arguments)
       var client = publicClient()
+      console.log((' Fetch OrderBook!').red);
       client.fetchOrderBook(joinProduct(opts.product_id), {limit: opts.limit}).then(result => {
         cb(null, result)
       })
@@ -152,6 +158,7 @@ module.exports = function binance (conf) {
     cancelOrder: function (opts, cb) {
       var func_args = [].slice.call(arguments)
       var client = authedClient()
+      console.log((' Fetch Cancel Order!').red);
       client.cancelOrder(opts.order_id, joinProduct(opts.product_id)).then(function (body) {
         if (body && (body.message === 'Order already done' || body.message === 'order not found')) return cb()
         cb(null)
@@ -192,6 +199,7 @@ module.exports = function binance (conf) {
       opts.side = 'buy'
       delete opts.order_type
       var order = {}
+      console.log((' Fetch Buy!').red);
       client.createOrder(joinProduct(opts.product_id), opts.type, opts.side, this.roundToNearest(opts.size, opts), opts.price, args).then(result => {
         if (result && result.message === 'Insufficient funds') {
           order = {
@@ -247,6 +255,7 @@ module.exports = function binance (conf) {
       opts.side = 'sell'
       delete opts.order_type
       var order = {}
+      console.log((' Fetch Sell!').red);
       client.createOrder(joinProduct(opts.product_id), opts.type, opts.side, this.roundToNearest(opts.size, opts), opts.price, args).then(result => {
         if (result && result.message === 'Insufficient funds') {
           order = {
@@ -296,6 +305,7 @@ module.exports = function binance (conf) {
       var func_args = [].slice.call(arguments)
       var client = authedClient()
       var order = orders['~' + opts.order_id]
+      console.log((' Fetch Order!').red);
       client.fetchOrder(opts.order_id, joinProduct(opts.product_id)).then(function (body) {
         if (body.status !== 'open' && body.status !== 'canceled') {
           order.status = 'done'

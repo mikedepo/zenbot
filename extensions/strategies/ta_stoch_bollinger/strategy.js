@@ -9,8 +9,8 @@ module.exports = {
   description: 'Stochastic BollingerBand Strategy',
 
   getOptions: function() {
-    this.option('period', 'period length, same as --period_length', String, '3m')
-    this.option('period_length', 'period length, same as --period', String, '3m')
+    this.option('period', 'period length, same as --period_length', String, '3s')
+    this.option('period_length', 'period length, same as --period', String, '3s')
     this.option('min_periods', 'min. number of history periods', Number, 200)
     // this.option('rsi_periods', 'Time period for building the Fast-K line', Number, 14)
     this.option('stoch_periods', 'Time period for building the Fast-K line', Number, 14)
@@ -18,12 +18,12 @@ module.exports = {
     this.option('stoch_k_ma_type', 'Type of Moving Average for Slow-K : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'DEMA'),
     this.option('stoch_d', 'Smoothing for making the Slow-D line', Number, 3)
     this.option('stoch_d_ma_type', 'Type of Moving Average for Slow-D : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'DEMA'),
-    this.option('stoch_k_sell', 'K must be above this before selling', Number, 75)
-    this.option('stoch_k_buy', 'K must be below this before buying', Number, 25)
+    this.option('stoch_k_sell', 'K must be above this before selling', Number, 70)
+    this.option('stoch_k_buy', 'K must be below this before buying', Number, 35)
 
     this.option('bollinger_size', 'period size', Number, 20)
-    this.option('bollinger_updev', '', Number, 2)
-    this.option('bollinger_dndev', '', Number, 2)
+    this.option('bollinger_updev', '', Number, 1.8)
+    this.option('bollinger_dndev', '', Number, 1.8)
     this.option('bollinger_dType', 'mode: : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'SMA')
     this.option('bollinger_upper_bound_pct', 'pct the current price should be near the bollinger upper bound before we sell', Number, 0)
     this.option('bollinger_lower_bound_pct', 'pct the current price should be near the bollinger lower bound before we buy', Number, 0)
