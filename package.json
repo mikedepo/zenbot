@@ -20,7 +20,9 @@
     "test-one": "jasmine $PATH_TO_TEST",
     "postinstall": "node post_install.js",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "prepare": "npm run snyk-protect",
+    "debug": "node zenbot.js trade binance.SAND-USDT --paper --strategy neural",
+    "sim": "node --inspect zenbot.js sim --days 1 binance.SAND-USDT --strategy ta_macd.1"
   },
   "lint-staged": {
     "*.js": [

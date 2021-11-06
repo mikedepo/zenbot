@@ -9,24 +9,27 @@ module.exports = {
   description: 'Stochastic BollingerBand Strategy',
 
   getOptions: function() {
-    this.option('period', 'period length, same as --period_length', String, '3s')
-    this.option('period_length', 'period length, same as --period', String, '3s')
-    this.option('min_periods', 'min. number of history periods', Number, 200)
+    this.option('period', 'period length, same as --period_length', String, '10s')
+    this.option('period_length', 'period length, same as --period', String, '10s')
+    this.option('min_periods', 'min. number of history periods', Number, 120)
+
     // this.option('rsi_periods', 'Time period for building the Fast-K line', Number, 14)
     this.option('stoch_periods', 'Time period for building the Fast-K line', Number, 14)
     this.option('stoch_k', 'Smoothing for making the Slow-K line. Usually set to 3', Number, 3)
-    this.option('stoch_k_ma_type', 'Type of Moving Average for Slow-K : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'DEMA'),
+    this.option('stoch_k_ma_type', 'Type of Moving Average for Slow-K : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'SMA'),
     this.option('stoch_d', 'Smoothing for making the Slow-D line', Number, 3)
-    this.option('stoch_d_ma_type', 'Type of Moving Average for Slow-D : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'DEMA'),
+    this.option('stoch_d_ma_type', 'Type of Moving Average for Slow-D : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'SMA'),
     this.option('stoch_k_sell', 'K must be above this before selling', Number, 70)
-    this.option('stoch_k_buy', 'K must be below this before buying', Number, 35)
+    this.option('stoch_k_buy', 'K must be below this before buying', Number, 15)
 
     this.option('bollinger_size', 'period size', Number, 20)
-    this.option('bollinger_updev', '', Number, 1.8)
-    this.option('bollinger_dndev', '', Number, 1.8)
+    this.option('bollinger_updev', '', Number, 1.7)
+    this.option('bollinger_dndev', '', Number, 1.7)
     this.option('bollinger_dType', 'mode: : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'SMA')
     this.option('bollinger_upper_bound_pct', 'pct the current price should be near the bollinger upper bound before we sell', Number, 0)
     this.option('bollinger_lower_bound_pct', 'pct the current price should be near the bollinger lower bound before we buy', Number, 0)
+
+
   },
 
   calculate: function(s) {
@@ -102,20 +105,33 @@ module.exports = {
       if (s.period.bollinger.upperBound && s.period.bollinger.lowerBound) {
         let upperBound = s.period.bollinger.upperBound
         let lowerBound = s.period.bollinger.lowerBound
-        var color = 'grey'
+        var colorBollinger = 'grey'
         if (Math.max(s.period.close, s.period.open) > (upperBound / 100) * (100 + s.options.bollinger_upper_bound_pct)) {
-          color = 'green'
+          colorBollinger = 'red'
         }
         if (Math.min(s.period.close, s.period.open) < (lowerBound / 100) * (100 - s.options.bollinger_lower_bound_pct)) {
-          color = 'red'
+          colorBollinger = 'green'
         }
-        cols.push(z(8, n(s.period.close).format('+00.0000'), ' ')[color])
+
+        var colorStoch = 'grey'
+        if(s.period.stoch_K < s.options.stoch_k_buy)
+        {
+          colorStoch = "green"
+        }
+        else if(s.period.stoch_K > s.options.stoch_k_sell){
+          colorStoch = "red"
+        }
+
+        var colorSwitch = s.period._switch < 0 ? "red" : s.period._switch > 0 ? "green" : "grey";
+
         cols.push(z(8, n(lowerBound).format('0.0000').substring(0, 7), ' ').cyan)
+        cols.push(z(8, n(s.period.close).format('+00.0000'), ' ')[colorBollinger])
         cols.push(z(8, n(upperBound).format('0.0000').substring(0, 7), ' ').cyan)
+
         cols.push(z(8, n(s.period.stoch_D).format('0.0000').substring(0, 7), ' ').cyan)
-        cols.push(z(8, n(s.period.stoch_K).format('0.0000').substring(0, 7), ' ').cyan)
-        cols.push(z(5, n(s.period.divergent).format('0').substring(0, 7), ' ').cyan)
-        cols.push(z(2, n(s.period._switch).format('0').substring(0, 2), ' ').cyan)
+        cols.push(z(8, n(s.period.stoch_K).format('0.0000').substring(0, 7), ' ')[colorBollinger])
+        cols.push(z(5, n(s.period.divergent).format('0').substring(0, 7), ' ').yellow)
+        cols.push(z(2, n(s.period._switch).format('0').substring(0, 2), ' ')[colorSwitch])
       }
     } else {
       cols.push('         ')
