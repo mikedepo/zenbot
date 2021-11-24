@@ -21,8 +21,8 @@
     "postinstall": "node post_install.js",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect",
-    "debug": "node zenbot.js trade binance.SAND-USDT --paper --strategy neural",
-    "sim": "node --inspect zenbot.js sim --days 1 binance.SAND-USDT --strategy ta_macd.1"
+    "debug": "node --max-old-space-size=8192 zenbot.js trade binance.SAND-USDT --days 1 --paper --strategy ta_macd.1",
+    "sim": "node --max-old-space-size=8192 --inspect zenbot.js sim --days 1 binance.SAND-USDT --strategy ta_macd.1"
   },
   "lint-staged": {
     "*.js": [
